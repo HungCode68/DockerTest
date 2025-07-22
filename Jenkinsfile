@@ -2,23 +2,16 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'hungcode68/dockertest'   // Thay bằng tên Docker Hub của bạn
+        IMAGE_NAME = 'hungcode68/dockertest'        // Tên Docker image bạn muốn push
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'javawebapp_container'
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds' // ID đã tạo trong Jenkins Credentials
+        CONTAINER_NAME = 'javawebapp_container'     // Tên container
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'   // ID credentials trong Jenkins
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/HungCode68/DockerTest.git'
-            }
-        }
-
         stage('Build WAR') {
             steps {
-                bat 'mvn clean package'  // Nếu dùng Maven
-                // Hoặc: bat 'gradlew build' nếu dùng Gradle
+                bat 'mvn clean package' // Nếu bạn dùng Maven để tạo file .war
             }
         }
 
@@ -33,13 +26,13 @@ pipeline {
         stage('Stop Previous Container') {
             steps {
                 script {
-                    def containerExists = sh(
+                    def containerExists = bat(
                         script: "docker ps -a -q -f name=${CONTAINER_NAME}",
                         returnStdout: true
                     ).trim()
                     if (containerExists) {
-                        sh "docker stop ${CONTAINER_NAME}"
-                        sh "docker rm ${CONTAINER_NAME}"
+                        bat "docker stop ${CONTAINER_NAME}"
+                        bat "docker rm ${CONTAINER_NAME}"
                     }
                 }
             }
@@ -47,7 +40,7 @@ pipeline {
 
         stage('Run New Container') {
             steps {
-                sh "docker run -d --name ${CONTAINER_NAME} -p 8081:8081 ${IMAGE_NAME}:${IMAGE_TAG}"
+                bat "docker run -d --name ${CONTAINER_NAME} -p 8081:8081 ${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
 
@@ -64,10 +57,10 @@ pipeline {
 
     post {
         success {
-            echo 'Triển khai Java Web App thành công!'
+            echo '✅ Triển khai Java Web App thành công tại http://localhost:8081'
         }
         failure {
-            echo 'Có lỗi xảy ra trong pipeline!'
+            echo '❌ Có lỗi xảy ra trong pipeline!'
         }
     }
 }
