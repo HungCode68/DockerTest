@@ -17,11 +17,10 @@ pipeline {
                         rmdir /s /q build
                     )
                     mkdir build
-                    jar -cvf build/WebApplication.war -C WebContent .
+                    jar -cvf build/VinfastSystem.war -C WebContent .
                 '''
             }
         }
-
 
         stage('Build Docker Image') {
             steps {
