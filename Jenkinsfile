@@ -33,7 +33,7 @@ stage('Build WAR') {
 
             rem Đóng gói file WAR
             cd build\\warcontent
-            jar -cvf ..\\VinfastSystem.war *
+            jar -cvf ..\\WebApplication.war *
             cd ..\\..
         '''
     }
