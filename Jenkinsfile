@@ -73,8 +73,8 @@ stage('Build WAR') {
             ).trim()
 
             if (containerId) {
-                bat "docker stop ${CONTAINER_NAME}"
-                bat "docker rm ${CONTAINER_NAME}"
+                bat "docker stop ${CONTAINER_NAME} || exit 0"
+                bat "docker rm ${CONTAINER_NAME} || exit 0"
                 echo "✅ Container ${CONTAINER_NAME} stopped and removed."
             } else {
                 echo "ℹ️ Container ${CONTAINER_NAME} does not exist. Skipping stop/remove."
