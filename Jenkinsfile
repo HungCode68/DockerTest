@@ -2,16 +2,17 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'hungcode68/dockertest'        // Tên Docker image bạn muốn push
+        IMAGE_NAME = 'hungcode68/dockertest'
         IMAGE_TAG = 'latest'
-        CONTAINER_NAME = 'javawebapp_container'     // Tên container
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'   // ID credentials trong Jenkins
+        CONTAINER_NAME = 'javawebapp_container'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
     }
 
     stages {
-        stage('Build WAR') {
+        stage('Build WAR with Ant') {
             steps {
-                bat 'mvn clean package' // Nếu bạn dùng Maven để tạo file .war
+                bat 'ant clean'
+                bat 'ant dist' // hoặc target khác nếu bạn build WAR bằng tên khác
             }
         }
 
@@ -57,7 +58,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Triển khai Java Web App thành công tại http://localhost:8081'
+            echo '✅ Triển khai Java Web App bằng Ant thành công!'
         }
         failure {
             echo '❌ Có lỗi xảy ra trong pipeline!'
