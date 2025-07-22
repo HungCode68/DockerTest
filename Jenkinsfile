@@ -10,6 +10,36 @@ pipeline {
     }
 
     stages {
+
+stage('Build WAR') {
+    steps {
+        echo '📦 Compiling and packaging WAR file...'
+        bat '''
+            rem Xoá và tạo thư mục build mới
+            if exist build rmdir /s /q build
+            mkdir build\\classes
+            mkdir build\\warcontent
+
+            rem Biên dịch mã nguồn Java
+            javac -d build\\classes -cp "%TOMCAT_PATH%\\lib\\servlet-api.jar" ^
+                src\\*.java
+
+            rem Copy toàn bộ nội dung Web Pages vào warcontent
+            xcopy "Web Pages\\*" build\\warcontent /E /I /Y
+
+            rem Copy class đã biên dịch vào WEB-INF/classes
+            mkdir build\\warcontent\\WEB-INF\\classes
+            xcopy build\\classes\\* build\\warcontent\\WEB-INF\\classes /E /I /Y
+
+            rem Đóng gói file WAR
+            cd build\\warcontent
+            jar -cvf ..\\VinfastSystem.war *
+            cd ..\\..
+        '''
+    }
+}
+
+
         stage('Deploy to Tomcat') {
     steps {
         echo '🚀 Deploying WAR to Tomcat...'
