@@ -63,24 +63,26 @@ stage('Build WAR') {
             }
         }
 
-        stage('Stop Previous Container') {
+      stage('Stop Previous Container') {
     steps {
         echo '🛑 Stopping and removing previous container if exists...'
         script {
-            def containerExists = bat(
-                script: "docker ps -a -q -f name=${CONTAINER_NAME}",
+            def containerId = bat(
+                script: "docker ps -aq -f name=${CONTAINER_NAME}",
                 returnStdout: true
             ).trim()
 
-            if (containerExists) {
+            if (containerId) {
                 bat "docker stop ${CONTAINER_NAME}"
                 bat "docker rm ${CONTAINER_NAME}"
+                echo "✅ Container ${CONTAINER_NAME} stopped and removed."
             } else {
-                echo "ℹ️ Container ${CONTAINER_NAME} does not exist. Skipping stop/remove step."
+                echo "ℹ️ Container ${CONTAINER_NAME} does not exist. Skipping stop/remove."
             }
         }
     }
 }
+
 
 
         stage('Run New Container') {
