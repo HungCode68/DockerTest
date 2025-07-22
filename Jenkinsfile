@@ -8,7 +8,8 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
     }
 
-    stage('Deploy to Tomcat') {
+    stages {
+        stage('Deploy to Tomcat') {
     steps {
         echo '🚀 Deploying WAR to Tomcat...'
         bat '''
@@ -16,7 +17,7 @@ pipeline {
                 echo "Tomcat webapps folder not found!"
                 exit /b 1
             )
-            copy build\\VinfastSystem.war "%TOMCAT_PATH%\\webapps\\" /Y
+            copy build\\WebApplication.war "%TOMCAT_PATH%\\webapps\\" /Y
         '''
     }
 }
