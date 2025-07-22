@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'hungcode68/dockertest'
         IMAGE_TAG = 'latest'
         CONTAINER_NAME = 'javawebapp_container'
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
         TOMCAT_PATH = 'C:\\apache-tomcat-10.1.41'
     }
 
