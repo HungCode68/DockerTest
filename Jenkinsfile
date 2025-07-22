@@ -9,9 +9,22 @@ pipeline {
     }
 
     stages {
+        stage('Build WAR') {
+            steps {
+                echo '📦 Building WAR file manually using jar...'
+                bat '''
+                    if exist build (
+                        rmdir /s /q build
+                    )
+                    mkdir build
+                    jar -cvf build/WebApplication.war -C WebContent .
+                '''
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                echo '🐳 Building Docker image from existing WAR...'
+                echo '🐳 Building Docker image from WAR...'
                 script {
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
