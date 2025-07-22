@@ -9,18 +9,18 @@ pipeline {
     }
 
     stages {
-        stage('Deploy to Tomcat') {
-    steps {
-        echo '🚀 Deploying WAR to Tomcat...'
-        bat '''
-            if not exist "%TOMCAT_PATH%\\webapps" (
-                echo "Tomcat webapps folder not found!"
-                exit /b 1
-            )
-            copy build\\WebApplication.war "%TOMCAT_PATH%\\webapps\\" /Y
-        '''
-    }
-}
+        stage('Build WAR') {
+            steps {
+                echo '📦 Building WAR file manually using jar...'
+                bat '''
+                    if exist build (
+                        rmdir /s /q build
+                    )
+                    mkdir build
+                    jar -cvf build/WebApplication.war -C WebContent .
+                '''
+            }
+        }
 
 
         stage('Build Docker Image') {
